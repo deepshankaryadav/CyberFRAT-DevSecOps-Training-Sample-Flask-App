@@ -34,7 +34,7 @@ pipeline {
         stage('Deploy to Application Server') {
             steps {
                 sshagent(['AppSec']) {
-                    sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "uptime && docker pull $registry:staging && docker stop $registry:staging && docker run -d -p 127.0.0.1:5000:5000 $registry:staging"'
+                    sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "uptime && docker pull $registry:staging && docker rm $(docker stop $(docker ps -a -q -f ancestor=<image-name>)) && docker run -d -p 127.0.0.1:5000:5000 $registry:staging"'
                     }
                 }
             }
