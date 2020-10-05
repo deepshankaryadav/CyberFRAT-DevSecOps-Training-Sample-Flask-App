@@ -24,10 +24,19 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Clean Up') {
             steps {
                 sh "docker rmi $registry:$BUILD_NUMBER"  
+                }
+            }
+
+        stage('Deploy to Application Server') {
+            steps {
+                sshagent(['AppSec']) {
+                    sh "ssh root@159.65.157.103"
+                    sh "docker images"
+                    }
                 }
             }
         }
