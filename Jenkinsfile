@@ -2,6 +2,7 @@ pipeline {
     environment {
         registry = "thedeepsyadav/devsecops-training"
         registryCredential = 'DockerHub'
+        dockerImage = ''
     }
     agent any 
 
@@ -9,10 +10,11 @@ pipeline {
         stage('Building Docker Image') {
             steps {
                 script {
-                    docker.build registry + ":$BUILD_NUMBER"
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
                 }
             }
         }
+
         stage('Push Docker Image to DockerHub') {
             steps {
                 script {
@@ -22,6 +24,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Clean Up') {
             steps {
                 sh "docker rmi $registry:$BUILD_NUMBER"  
