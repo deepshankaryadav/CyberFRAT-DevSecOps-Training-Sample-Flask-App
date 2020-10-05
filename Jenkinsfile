@@ -6,7 +6,7 @@ pipeline {
     agent any 
 
     stages {
-        stage('Building image') {
+        stage('Building Docker Image') {
             steps {
                 script {
                     docker.build registry + ":$BUILD_NUMBER"
