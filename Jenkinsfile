@@ -34,7 +34,7 @@ pipeline {
         stage('Deploy to Application Server') {
             steps {
                 sshagent(['AppSec']) {
-                    sh "ssh root@159.65.157.103"
+                    sh "ssh -o StrictHostKeyChecking=no root@159.65.157.103 uptime"
                     sh "docker images"
                     }
                 }
