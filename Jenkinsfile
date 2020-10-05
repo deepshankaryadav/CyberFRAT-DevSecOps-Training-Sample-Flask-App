@@ -35,7 +35,7 @@ pipeline {
             steps {
                 sshagent(['AppSec']) {
                     sh "ssh -o StrictHostKeyChecking=no root@159.65.157.103 uptime"
-                    sh "docker images"
+                    sh "docker run -d -p 5000:5000 $registry:$BUILD_NUMBER"
                     }
                 }
             }
