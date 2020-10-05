@@ -7,7 +7,7 @@ pipeline {
     agent any 
 
     stages {
-        stage('Building Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to DockerHub') {
+        stage('Push Image to DockerHub') {
             steps {
                 script {
                     docker.withRegistry( '', registryCredential ) { 
@@ -25,16 +25,24 @@ pipeline {
             }
         }
 
-        stage('Clean Up') {
+        stage('Server Clean Up') {
             steps {
                 sh "docker rmi $registry:$BUILD_NUMBER"  
                 }
             }
 
-        stage('Deploy to Application Server') {
+        stage('Download New Build') {
             steps {
                 sshagent(['AppSec']) {
-                    sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "uptime && docker pull $registry:staging && docker stop devsecops-flaskr && docker run -d --name devsecops-flaskr -p 127.0.0.1:5000:5000 $registry:staging"'
+                    sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "uptime && docker pull $registry:staging && docker stop devsecops-flaskr && docker rm devsecops-flaskr"'
+                    }
+                }
+            }
+        
+        stage('Deploy New Build') {
+            steps {
+                sshagent(['AppSec']) {
+                    sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "docker run -d --name devsecops-flaskr -p 127.0.0.1:5000:5000 $registry:staging"'
                     }
                 }
             }
