@@ -12,7 +12,7 @@ pipeline {
                 script {
                     sh """
                     pwd
-                    ls -la""
+                    ls -la"""
                     dockerImage = docker.build registry + ":$BUILD_NUMBER"
                 }
             }
