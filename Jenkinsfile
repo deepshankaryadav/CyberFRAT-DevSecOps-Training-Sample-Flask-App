@@ -48,17 +48,18 @@ pipeline {
             }
         
         stage('Prisma Cloud Scan Scan') {
-            // Scan the image
-            prismaCloudScanImage ca: '',
-            cert: '',
-            dockerAddress: 'unix:///var/run/docker.sock',
-            image: '$registry:staging',
-            key: '',
-            logLevel: 'info',
-            podmanPath: '',
-            project: '',
-            resultsFile: 'prisma-cloud-scan-results.json',
-            ignoreImageBuildTime:true
-          }
+            steps {
+                prismaCloudScanImage ca: '',
+                cert: '',
+                dockerAddress: 'unix:///var/run/docker.sock',
+                image: '$registry:staging',
+                key: '',
+                logLevel: 'info',
+                podmanPath: '',
+                project: '',
+                resultsFile: 'prisma-cloud-scan-results.json',
+                ignoreImageBuildTime:true
+            }
+        }
     }
 }
