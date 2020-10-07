@@ -52,7 +52,7 @@ pipeline {
                 prismaCloudScanImage ca: '',
                 cert: '',
                 dockerAddress: 'unix:///var/run/docker.sock',
-                image: '$registry:staging',
+                image: 'thedeepsyadav/devsecops-training:*',
                 key: '',
                 logLevel: 'info',
                 podmanPath: '',
