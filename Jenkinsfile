@@ -57,7 +57,9 @@ pipeline {
                 logLevel: 'debug',
                 podmanPath: '',
                 project: '',
+                resultsFile: 'prisma-cloud-scan-results.json',
                 ignoreImageBuildTime:true
+                sh 'cat prisma-cloud-scan-results.json'
             }
         }
     }
