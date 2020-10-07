@@ -54,10 +54,9 @@ pipeline {
                 dockerAddress: 'unix:///var/run/docker.sock',
                 image: 'thedeepsyadav/devsecops-training:*',
                 key: '',
-                logLevel: 'info',
+                logLevel: 'debug',
                 podmanPath: '',
                 project: '',
-                resultsFile: 'prisma-cloud-scan-results.json',
                 ignoreImageBuildTime:true
             }
         }
