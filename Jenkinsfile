@@ -43,23 +43,7 @@ pipeline {
             steps {
                 sshagent(['AppSec']) {
                     sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "docker run -d --name devsecops-flaskr -p 127.0.0.1:5000:5000 $registry:staging"'
-                    }
                 }
-            }
-        
-        stage('Prisma Cloud Scan Scan') {
-            steps {
-                prismaCloudScanImage ca: '',
-                cert: '',
-                dockerAddress: 'unix:///var/run/docker.sock',
-                image: 'thedeepsyadav/devsecops-training:*',
-                key: '',
-                logLevel: 'debug',
-                podmanPath: '',
-                project: '',
-                resultsFile: 'prisma-cloud-scan-results.json',
-                sh 'cat prisma-cloud-scan-results.json',
-                ignoreImageBuildTime:true
             }
         }
     }
