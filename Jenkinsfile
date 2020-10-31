@@ -10,8 +10,9 @@ pipeline {
   stages {
     stage('Check for Secrets'){
       steps {
-          sh "docker run dxa4481/trufflehog:latest --json https://github.com/deepshankaryadav/CyberFRAT-DevSecOps-Training-Sample-Flask-App.git > trufflehog.json"
-          sh "cat trufflehog.json"
+        sh "rm -rf trufflehog.json || true"
+        sh "docker run dxa4481/trufflehog:latest --json https://github.com/deepshankaryadav/CyberFRAT-DevSecOps-Training-Sample-Flask-App.git > trufflehog.json || true"
+        sh "cat trufflehog.json"
       }
     }
     
