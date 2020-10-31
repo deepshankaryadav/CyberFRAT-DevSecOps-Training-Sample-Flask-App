@@ -4,4 +4,4 @@ itsdangerous==1.1.0       # via flask
 jinja2==2.11.1            # via flask
 markupsafe==1.1.1         # via jinja2
 werkzeug==1.0.0           # via flask
-insecure-package==0.1.0   # Added by Deep
+insecure-package==0.1.0   # Added for Exercise
