@@ -61,7 +61,7 @@ pipeline {
 
     stage('DAST Scan'){
       steps{
-        sh 'docker run -t owasp/zap2docker-stable zap-baseline.py -t 'http://build.dsy.sh:5000' || true'
+        sh 'docker run -t owasp/zap2docker-stable zap-baseline.py -t http://build.dsy.sh:5000/ || true'
       }
     }
   } 
