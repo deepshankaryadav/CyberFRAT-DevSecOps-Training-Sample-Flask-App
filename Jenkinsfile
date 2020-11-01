@@ -51,7 +51,7 @@ pipeline {
       }
     }
     
-    stage('Deploy Test Application) {
+    stage('Deploy Test Application') {
       steps {
         sh 'docker stop flaskr && docker rm flaskr || true'
         sh 'docker pull thedeepsyadav/devsecops-training:latest'
