@@ -55,7 +55,7 @@ pipeline {
       steps {
         sh 'docker stop flaskr && docker rm flaskr || true'
         sh 'docker pull thedeepsyadav/devsecops-training:$BUILD_NUMBER'
-        sh 'docker run -p 5000:5000 --name flaskr thedeepsyadav/devsecops-training:$BUILD_NUMBER'
+        sh 'docker run -d -p 5000:5000 --name flaskr thedeepsyadav/devsecops-training:$BUILD_NUMBER'
       }
     }
 
