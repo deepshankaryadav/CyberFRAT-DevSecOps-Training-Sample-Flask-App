@@ -65,18 +65,28 @@ pipeline {
       }
     }
     
-    stage("docker_scan"){
-      steps{
-        sh '''
-        docker run -d --name db arminc/clair-db
-        sleep 15 # wait for db to come up
-        docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan
-        sleep 1
-        DOCKER_GATEWAY=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")
-        wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
-        ./clair-scanner --ip="$DOCKER_GATEWAY" thedeepsyadav/devsecops-training:$BUILD_NUMBER || exit 0
-        '''
+    stage("Docker Security"){
+      parallel{
+        stage("Docker Benchmarking"){
+          steps{
+            sh 'docker run -it --net host --pid host --userns host --cap-add audit_control -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST -v /etc:/etc:ro -v /usr/bin/containerd:/usr/bin/containerd:ro -v /usr/bin/runc:/usr/bin/runc:ro -v /usr/lib/systemd:/usr/lib/systemd:ro -v /var/lib:/var/lib:ro -v /var/run/docker.sock:/var/run/docker.sock:ro --label docker_bench_security docker/docker-bench-security > dockerbench.log'
+            sh 'cat dockerbench.log'
+          }
+        }
+        stage("Image Scanning"){
+          steps{
+            sh '''
+            docker run -d --name db arminc/clair-db
+            sleep 15 # wait for db to come up
+            docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan
+            sleep 1
+            DOCKER_GATEWAY=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")
+            wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
+            ./clair-scanner --ip="$DOCKER_GATEWAY" thedeepsyadav/devsecops-training:$BUILD_NUMBER || exit 0
+            '''
+          }
+        }
       }
-    }
+    } 
   } 
 }
