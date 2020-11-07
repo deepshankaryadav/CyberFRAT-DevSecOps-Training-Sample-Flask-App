@@ -71,9 +71,7 @@ pipeline {
           steps{
             sh '''
             docker pull docker/docker-bench-security
-            docker run --net host --pid host --cap-add audit_control -v /var/lib:/var/lib -v /var/run/docker.sock:/var/run/docker.sock -v /usr/lib/systemd:/usr/lib/systemd -v /etc:/etc --label docker_bench_security docker/docker-bench-security
-            docker rm $(sudo docker ps -aq -f status=exited)
-            docker rmi docker/docker-bench-security
+            docker run --net host --pid host --cap-add audit_control -v /var/lib:/var/lib -v /var/run/docker.sock:/var/run/docker.sock -v /usr/lib/systemd:/usr/lib/systemd -v /etc:/etc --label docker_bench_security docker/docker-bench-security || true
             '''
           }
         }
