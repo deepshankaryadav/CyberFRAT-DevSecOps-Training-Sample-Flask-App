@@ -3,6 +3,7 @@ pipeline {
     registry = "thedeepsyadav/devsecops-training"
     registryCredential = "DockerHub"
     dockerImage = ''
+    time=$(date +'%Y-%m-%d')
   }
   
   agent any
@@ -13,7 +14,6 @@ pipeline {
         sh "rm -rf trufflehog.json || true"
         sh "docker run dxa4481/trufflehog:latest --json https://github.com/deepshankaryadav/CyberFRAT-DevSecOps-Training-Sample-Flask-App.git > trufflehog.json || true"
         sh "cat trufflehog.json"
-        sh "echo time=$(date +'%Y-%m-%d')"
         sh "curl -i -F "file=@trufflehog.json" -H "Authorization: ApiKey admin:af88fe9e8ab6524b3497d10c201fdf564d4eaff3" -F 'scan_type=Trufflehog Scan' -F 'tags=apicurl' -F 'verified=true' -F 'active=true' -F scan_date=${time} -F 'engagement=/api/v1/engagements/1/' http://159.65.157.103:8080/api/v1/importscan/"
       }
     }
