@@ -104,7 +104,7 @@ pipeline {
       steps {
         sshagent(['AppSec']) {
           sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "uptime && docker pull thedeepsyadav/devsecops-training:latest && docker stop devsecops-training && docker rm devsecops-training && docker run -d -p 5000:5000 --name devsecops-training thedeepsyadav/devsecops-training:latest"'
-          sh 'sh -o StrictHostKeyChecking=no root@159.65.157.103 "inspec exec https://github.com/dev-sec/linux-baseline || true"'
+          sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "inspec exec https://github.com/dev-sec/linux-baseline || true"'
         }
       }
     }
