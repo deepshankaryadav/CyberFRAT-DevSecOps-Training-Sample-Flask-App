@@ -112,7 +112,7 @@ pipeline {
     stage("Push Data to DefectDojo"){
       steps{
         sh '''
-        DATE= date +%Y-%m-%d
+        export DATE= date +%Y-%m-%d
         curl -i -F 'file=@trufflehog.json' -H 'Authorization: ApiKey admin:af88fe9e8ab6524b3497d10c201fdf564d4eaff3' -F 'scan_type=Trufflehog Scan' -F 'tags=apicurl' -F 'verified=true' -F 'active=true' -F scan_date=${DATE} -F 'engagement=/api/v1/engagements/1/' http://159.65.157.103:8080/api/v1/importscan/
         '''
       }
