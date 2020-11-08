@@ -103,9 +103,18 @@ pipeline {
     stage('Deploy to Application Server') {
       steps {
         sshagent(['AppSec']) {
-          sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "uptime && docker pull thedeepsyadav/devsecops-training:latest && docker stop devsecops-training && docker run -d -p 5000:5000 --name devsecops-training thedeepsyadav/devsecops-training:latest"'
+          sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "uptime && docker pull thedeepsyadav/devsecops-training:latest && docker stop devsecops-training && docker rm devsecops-training && docker run -d -p 5000:5000 --name devsecops-training thedeepsyadav/devsecops-training:latest"'
           sh 'sh -o StrictHostKeyChecking=no root@159.65.157.103 "inspec exec https://github.com/dev-sec/linux-baseline || true"'
         }
+      }
+    }
+    
+    stage("Push Data to DefectDojo"){
+      steps{
+        sh '''
+        time = 'date +%y-%m-%d'
+        curl -i -F 'file=@trufflehog.json' -H 'Authorization: ApiKey admin:af88fe9e8ab6524b3497d10c201fdf564d4eaff3' -F 'scan_type=Trufflehog Scan' -F 'tags=apicurl' -F 'verified=true' -F 'active=true' -F scan_date=${time} -F 'engagement=/api/v1/engagements/1/' http://159.65.157.103:8080/api/v1/importscan/
+        '''
       }
     }
   } 
