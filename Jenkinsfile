@@ -91,7 +91,7 @@ pipeline {
     stage("Compliance as Code"){
       steps{
         sh '''
-        curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
+        curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec || true
         inspec exec https://github.com/dev-sec/cis-docker-benchmark || true
         inspec exec https://github.com/dev-sec/linux-baseline || true
         '''
