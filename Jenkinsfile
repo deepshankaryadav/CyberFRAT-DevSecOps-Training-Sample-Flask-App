@@ -54,7 +54,7 @@ pipeline {
     stage('Deploy Test Application') {
       steps {
         sh 'docker stop flaskr && docker rm flaskr || true'
-        sh 'docker pull thedeepsyadav/devsecops-training:$BUILD_NUMBER'
+        sh 'docker pull thedeepsyadav/devsecops-training:latest'
         sh 'docker run -d -p 5000:5000 --name flaskr thedeepsyadav/devsecops-training:latest'
       }
     }
