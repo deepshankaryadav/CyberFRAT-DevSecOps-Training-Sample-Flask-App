@@ -14,7 +14,8 @@ pipeline {
         sh "rm -rf trufflehog.json || true"
         sh "docker run dxa4481/trufflehog:latest --json https://github.com/deepshankaryadav/CyberFRAT-DevSecOps-Training-Sample-Flask-App.git > trufflehog.json || true"
         sh "cat trufflehog.json"
-        sh "curl -i -F "file=@trufflehog.json" -H "Authorization: ApiKey admin:af88fe9e8ab6524b3497d10c201fdf564d4eaff3" -F 'scan_type=Trufflehog Scan' -F 'tags=apicurl' -F 'verified=true' -F 'active=true' -F scan_date=${time} -F 'engagement=/api/v1/engagements/1/' http://159.65.157.103:8080/api/v1/importscan/"
+        sh "echo time"
+        sh "curl -i -F 'file=@trufflehog.json' -H "Authorization: ApiKey admin:af88fe9e8ab6524b3497d10c201fdf564d4eaff3" -F 'scan_type=Trufflehog Scan' -F 'tags=apicurl' -F 'verified=true' -F 'active=true' -F scan_date=${time} -F 'engagement=/api/v1/engagements/1/' http://159.65.157.103:8080/api/v1/importscan/"
       }
     }
     
@@ -24,7 +25,7 @@ pipeline {
         sh "rm -rf safety.json || true"
         sh "safety check -r requirements.txt --json > safety.json || true"
         sh "cat safety.json"
-        sh "curl -i -F "file=@safety.json" -H "Authorization: ApiKey admin:af88fe9e8ab6524b3497d10c201fdf564d4eaff3" -F 'scan_type=Safety Scan' -F 'tags=apicurl' -F 'verified=true' -F 'active=true' -F scan_date=${time} -F 'engagement=/api/v1/engagements/1/' http://159.65.157.103:8080/api/v1/importscan/"
+        sh "curl -i -F 'file=@safety.json' -H "Authorization: ApiKey admin:af88fe9e8ab6524b3497d10c201fdf564d4eaff3" -F 'scan_type=Safety Scan' -F 'tags=apicurl' -F 'verified=true' -F 'active=true' -F scan_date=${time} -F 'engagement=/api/v1/engagements/1/' http://159.65.157.103:8080/api/v1/importscan/"
         
       }
     }
@@ -34,7 +35,7 @@ pipeline {
         sh "rm -rf bandit.json || true"
         sh "bandit -r -f=json -o=bandit.json . || true"
         sh "cat bandit.json"
-        sh "curl -i -F "file=@bandit.json" -H "Authorization: ApiKey admin:af88fe9e8ab6524b3497d10c201fdf564d4eaff3" -F 'scan_type=Bandit' -F 'tags=apicurl' -F 'verified=true' -F 'active=true' -F scan_date=${time} -F 'engagement=/api/v1/engagements/1/' http://159.65.157.103:8080/api/v1/importscan/"
+        sh "curl -i -F 'file=@bandit.json' -H "Authorization: ApiKey admin:af88fe9e8ab6524b3497d10c201fdf564d4eaff3" -F 'scan_type=Bandit' -F 'tags=apicurl' -F 'verified=true' -F 'active=true' -F scan_date=${time} -F 'engagement=/api/v1/engagements/1/' http://159.65.157.103:8080/api/v1/importscan/"
       }
     }
     
