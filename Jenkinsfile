@@ -45,7 +45,7 @@ pipeline {
       steps {
         script {
           docker.withRegistry('', registryCredential ) {
-            dockerImage.push()
+            dockerImage.push('latest')
           }
         }
       }
@@ -55,13 +55,7 @@ pipeline {
       steps {
         sh 'docker stop flaskr && docker rm flaskr || true'
         sh 'docker pull thedeepsyadav/devsecops-training:$BUILD_NUMBER'
-        sh 'docker run -d -p 5000:5000 --name flaskr thedeepsyadav/devsecops-training:$BUILD_NUMBER'
-      }
-    }
-
-    stage('DAST Scan'){
-      steps{
-        sh 'docker run -t owasp/zap2docker-stable zap-baseline.py -t http://build.dsy.sh:5000/ || true'
+        sh 'docker run -d -p 5000:5000 --name flaskr thedeepsyadav/devsecops-training:latest'
       }
     }
     
@@ -81,7 +75,7 @@ pipeline {
             sh '''
             DOCKER_GATEWAY=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")
             wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
-            ./clair-scanner --ip="$DOCKER_GATEWAY" thedeepsyadav/devsecops-training:$BUILD_NUMBER || exit 0
+            ./clair-scanner --ip="$DOCKER_GATEWAY" thedeepsyadav/devsecops-training:latest || exit 0
             '''
           }
         }
@@ -95,6 +89,23 @@ pipeline {
         inspec exec https://github.com/dev-sec/cis-docker-benchmark || true
         inspec exec https://github.com/dev-sec/linux-baseline || true
         '''
+      }
+    }
+    
+    stage("Deploy to PROD"){
+      steps{
+        script{
+          input message: 'Do you want to deploy in production?', ok: "OK"
+        }
+      }
+    }
+   
+    stage('Deploy to Application Server') {
+      steps {
+        sshagent(['AppSec']) {
+          sh 'ssh -o StrictHostKeyChecking=no root@159.65.157.103 "uptime && docker pull $registry:latest && docker stop $registry:latest && docker run -d -p 5000:5000 $registry:latest"'
+          sh 'sh -o StrictHostKeyChecking=no root@159.65.157.103 "inspec exec https://github.com/dev-sec/linux-baseline || true"'
+        }
       }
     }
   } 
