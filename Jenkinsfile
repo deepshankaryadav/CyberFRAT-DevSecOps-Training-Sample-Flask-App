@@ -95,7 +95,10 @@ pipeline {
     stage("Deploy to PROD"){
       steps{
         script{
+
           input message: 'Do you want to deploy in production?', ok: "OK"
+
+          
         }
       }
     }
