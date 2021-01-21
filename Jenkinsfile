@@ -26,7 +26,7 @@ pipeline {
 
     stage('Snyk Scan'){
       tools {
-        snyk 'snyk-latest'
+        snyk 'Snyk'
       }
       steps {
         snykSecurity(
