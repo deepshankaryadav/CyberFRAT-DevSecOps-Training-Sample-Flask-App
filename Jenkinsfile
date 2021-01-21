@@ -25,7 +25,8 @@ pipeline {
         snykSecurity(
           snykInstallation: 'Snyk',
           snykTokenId: 'SnykToken',
-          failOnIssues: 'false'
+          failOnIssues: 'false',
+          additionalArguments: '--command=python3'
         )
       }
     }
