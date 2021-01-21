@@ -10,6 +10,7 @@ pipeline {
   stages {
     stage('Check for Secrets'){
       steps {
+        sh "pip3 install -r requirements.txt"
         sh "rm -rf trufflehog.json || true"
         sh "docker run dxa4481/trufflehog:latest --json https://github.com/deepshankaryadav/CyberFRAT-DevSecOps-Training-Sample-Flask-App.git > trufflehog.json || true"
         sh "cat trufflehog.json"
@@ -95,7 +96,7 @@ pipeline {
     stage("Deploy to PROD"){
       steps{
         script{
-          
+
           input message: 'Do you want to deploy in production?', ok: "OK"
 
         }
