@@ -18,10 +18,22 @@ pipeline {
     
     stage('SCA'){
       steps {
-        sh "pip3 install safety"
         sh "rm -rf safety.json || true"
         sh "safety check -r requirements.txt --json > safety.json || true"
         sh "cat safety.json"
+      }
+    }
+
+    stage('Snyk Scan'){
+      tools {
+        snyk 'snyk-latest'
+      }
+      steps {
+        snykSecurity(
+          snykInstallation: 'Snyk',
+          snykTokenId: 'SnykToken',
+          failOnIssues: 'false'
+        )
       }
     }
     
