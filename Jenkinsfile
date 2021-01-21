@@ -15,16 +15,8 @@ pipeline {
         sh "cat trufflehog.json"
       }
     }
-    
-    stage('SCA'){
-      steps {
-        sh "rm -rf safety.json || true"
-        sh "safety check -r requirements.txt --json > safety.json || true"
-        sh "cat safety.json"
-      }
-    }
 
-    stage('Snyk Scan'){
+    stage('Snyk SCA Scan'){
       tools {
         snyk 'Snyk'
       }
@@ -82,35 +74,30 @@ pipeline {
           }
         }
         
-        stage("Image Scanning"){
-          steps{
-            sh '''
-            DOCKER_GATEWAY=$(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}")
-            wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
-            ./clair-scanner --ip="$DOCKER_GATEWAY" thedeepsyadav/devsecops-training:latest || exit 0
-            '''
+        stage('Prisma Cloud Scan') {
+          steps {
+            // Scan the image
+            prismaCloudScanImage ca: '',
+            cert: '',
+            dockerAddress: 'unix:///var/run/docker.sock',
+            image: 'thedeepsyadav/devsecops-training',
+            key: '',
+            logLevel: 'debug',
+            podmanPath: '',
+            project: '',
+            resultsFile: 'prisma-cloud-scan-results.json',
+            ignoreImageBuildTime:true
           }
         }
-      }
-    }
-    
-    stage("Compliance as Code"){
-      steps{
-        sh '''
-        curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec || true
-        inspec exec https://github.com/dev-sec/cis-docker-benchmark || true
-        inspec exec https://github.com/dev-sec/linux-baseline || true
-        '''
       }
     }
     
     stage("Deploy to PROD"){
       steps{
         script{
-
+          
           input message: 'Do you want to deploy in production?', ok: "OK"
 
-          
         }
       }
     }
