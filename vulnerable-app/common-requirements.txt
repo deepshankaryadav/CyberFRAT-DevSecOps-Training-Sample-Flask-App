@@ -3,7 +3,7 @@ certifi==2017.4.17
 chardet==3.0.4
 click==6.7
 Faker==0.7.17
-Flask==0.12.2
+Flask==0.12.3
 Flask-SQLAlchemy==2.2
 gevent==1.2.2
 greenlet==0.4.12
@@ -11,7 +11,7 @@ grequests==0.3.0
 idna==2.5
 ipaddress==1.0.18
 itsdangerous==0.24
-Jinja2==2.9.6
+Jinja2==2.11.3
 lxml==4.2.1
 MarkupSafe==1.0
 MySQL-python==1.2.5
@@ -22,7 +22,7 @@ PyYAML==5.4
 requests==2.18.1
 singledispatch==3.4.0.3
 six==1.10.0
-SQLAlchemy==1.1.11
+SQLAlchemy==1.2.18
 tornado==4.5.1
 urllib3==1.21.1
-Werkzeug==0.14.1
+Werkzeug==0.15.3
