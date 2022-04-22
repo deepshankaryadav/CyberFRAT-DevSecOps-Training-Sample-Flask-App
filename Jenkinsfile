@@ -70,8 +70,6 @@ pipeline {
             ignoreImageBuildTime:true
           }
         }
-      }
-    }
     
     stage('Push to DockerHub') {
       steps {
