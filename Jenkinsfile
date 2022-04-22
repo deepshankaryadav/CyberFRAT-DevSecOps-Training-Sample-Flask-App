@@ -39,10 +39,36 @@ pipeline {
       }
     }
     
+    stage("Security Gate 1 Check"){
+      steps{
+        script{
+          input message: 'Do you want to Continue?', ok: "OK"
+        }
+      }
+    }
+    
     stage('Build Docker Image') {
       steps {
         script {
           dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    
+     stage('Prisma Cloud Scan') {
+          steps {
+            // Scan the image
+            prismaCloudScanImage ca: '',
+            cert: '',
+            dockerAddress: 'unix:///var/run/docker.sock',
+            image: 'thedeepsyadav/devsecops-training',
+            key: '',
+            logLevel: 'debug',
+            podmanPath: '',
+            project: '',
+            resultsFile: 'prisma-cloud-scan-results.json',
+            ignoreImageBuildTime:true
+          }
         }
       }
     }
@@ -76,23 +102,7 @@ pipeline {
           }
         }
         
-        stage('Prisma Cloud Scan') {
-          steps {
-            // Scan the image
-            prismaCloudScanImage ca: '',
-            cert: '',
-            dockerAddress: 'unix:///var/run/docker.sock',
-            image: 'thedeepsyadav/devsecops-training',
-            key: '',
-            logLevel: 'debug',
-            podmanPath: '',
-            project: '',
-            resultsFile: 'prisma-cloud-scan-results.json',
-            ignoreImageBuildTime:true
-          }
-        }
-      }
-    }
+       
     
     stage("Deploy to PROD"){
       steps{
