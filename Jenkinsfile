@@ -69,7 +69,7 @@ pipeline {
             resultsFile: 'prisma-cloud-scan-results.json',
             ignoreImageBuildTime:true
           }
-        }
+      }
     
     stage('Push to DockerHub') {
       steps {
@@ -99,8 +99,8 @@ pipeline {
             '''
           }
         }
-        
-       
+      }
+    } 
     
     stage("Deploy to PROD"){
       steps{
